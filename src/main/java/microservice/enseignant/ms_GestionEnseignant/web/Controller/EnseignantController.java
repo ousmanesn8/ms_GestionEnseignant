@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-@Api( description="API pour les operations CRUD sur les Enseignants.")
+@Api( description = "API pour les operations CRUD sur les Enseignants.")
 @RestController
 public class EnseignantController {
 
@@ -42,23 +42,26 @@ public class EnseignantController {
         return ret;
     }
 */
+    @ApiOperation(value = "Récupère l'enseignant avec cet id")
     @GetMapping(value="/enseignants/{id}")
     public String findEnseigantByID(@PathVariable int id) {
         Optional<Enseignant> ens=ensDAO.findById(id);
         if(ens.isPresent()==false) throw new EnseignantIntrouvableException("L'enseignant avec l'id " + id + " est INTROUVABLE!!!");
         return ens.get().toString();
     }
-
+    @ApiOperation(value = "Supprimer un enseignant")
     @DeleteMapping(value="/enseignants/delete/{id}")
     public void deleteEnseignant(@PathVariable int id){
     ensDAO.deleteEnsignsByIdEns(id);
     }
 
+    @ApiOperation(value = "Ajouter un enseignant")
     @PostMapping("/enseignants/add")
     public Enseignant addEnseigant(@RequestBody Enseignant enseignant){
         ensDAO.save(enseignant);
         return  enseignant;
     }
+    @ApiOperation(value = "Mise à jours des info sur un enseignant")
     @PutMapping(value="/enseignants/update")
     public void updateEnseignant(@RequestBody Enseignant enseignant){
     ensDAO.save(enseignant);

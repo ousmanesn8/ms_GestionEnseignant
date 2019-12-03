@@ -1,17 +1,23 @@
 package microservice.enseignant.ms_GestionEnseignant.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
 public class Enseignant {
+    @Column(name = "idEns")
     @Id
     @GeneratedValue
     private int idEns;
+    @Column(name = "nom")
     private  String nom;
+    @Column(name = "prenom")
     private  String prenom;
+    @Column(name = "status")
     private  String status;
+    @Column(name = "specialite")
     private  String specialite;
 
 

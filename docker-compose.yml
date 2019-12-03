@@ -1,0 +1,21 @@
+version: "3"
+services:
+  enseignant-jdbc:
+    image: enseignant-jdbc
+    ports:
+      - "9191:9191"
+    networks:
+      - network-enseignant
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql
+    networks:
+      - network-enseignant
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=enseignantdb
+
+networks:
+  network-enseignant:
