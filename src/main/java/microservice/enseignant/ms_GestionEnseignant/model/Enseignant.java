@@ -1,15 +1,13 @@
 package microservice.enseignant.ms_GestionEnseignant.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "enseignant")
 public class Enseignant {
     @Column(name = "idEns")
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int idEns;
     @Column(name = "nom")
     private  String nom;

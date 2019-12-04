@@ -15,56 +15,58 @@ import java.util.List;
 import java.util.Optional;
 @Api( description = "API pour les operations CRUD sur les Enseignants.")
 @RestController
+@RequestMapping("/enseignants1")
 public class EnseignantController {
-
     @Autowired
     private EnseignantDao ensDAO;
-
     @Autowired
     public EnseignantController(EnseignantDao ensDAOService) {
         this.ensDAO=ensDAOService;
     }
-    @ApiOperation(value = "Récupère liste de tout les  enseigants ")
-    @RequestMapping(value="/enseignants",method = RequestMethod.GET)
-    public MappingJacksonValue listEnseigant(){
-        Iterable<Enseignant> enseignants=ensDAO.findAll();
-        MappingJacksonValue mapJVal=new MappingJacksonValue(enseignants);
-        return mapJVal;
+
+     //--------------------------------------------------------------------------------------µ
+    @ApiOperation(value = "Ajouter un enseignant")
+    @PostMapping("/add")
+    public Enseignant addEnseigant(@RequestBody Enseignant enseignant){
+        return   ensDAO.save(enseignant);
     }
-/*
-    @GetMapping(value="/enseignants/specialite/{specialite}")
-    public String listEnseigantParSpecialite(String specialite){
-        List<Enseignant> listenseignant=ensDAO.findEnsignsBySpecialite(specialite);
-        String ret="";
-        for (Enseignant e:listenseignant) {
-            ret =ret +"\n "+e.toString();
-        }
-        return ret;
+
+    //--------------------------------------------------------------------------------------µ
+
+    @ApiOperation(value = "Mise à jours des info sur un enseignant")
+    @PutMapping(value="/update/{ens_id}")
+    public Enseignant updateEnseignant(@PathVariable("ens_id") int ensId, @RequestBody Enseignant enseignant){
+        Optional<Enseignant> enseignant1=ensDAO.findById(ensId);
+       Enseignant e= enseignant1.get();
+       e.setPrenom(enseignant.getPrenom());
+       e.setNom(enseignant.getNom());
+       e.setSpecialite(enseignant.getSpecialite());
+       e.setStatus(enseignant.getStatus());
+       return ensDAO.save(e);
     }
-*/
+
+    //--------------------------------------------------------------------------------------µ
+    @ApiOperation(value = "Supprimer un enseignant")
+    @DeleteMapping(value="/delete/{idEns}")
+    public List<Enseignant> deleteEnseignant(@PathVariable("idEns") int id){
+    ensDAO.deleteById(id);
+    return  ensDAO.findAll();
+    }
+    //--------------------------------------------------------------------------------------µ
+
+    @ApiOperation(value = "Récupère liste de tout les  enseignants ")
+    @GetMapping(value="/all")
+    public List<Enseignant> listEnseigant(){
+        return ensDAO.findAll();
+    }
+//--------------------------------------------------------------------------------------µ
+
     @ApiOperation(value = "Récupère l'enseignant avec cet id")
-    @GetMapping(value="/enseignants/{id}")
-    public String findEnseigantByID(@PathVariable int id) {
+    @GetMapping(value="/{idEns}")
+    public String findEnseigantByID(@PathVariable("idEns") int id) {
         Optional<Enseignant> ens=ensDAO.findById(id);
         if(ens.isPresent()==false) throw new EnseignantIntrouvableException("L'enseignant avec l'id " + id + " est INTROUVABLE!!!");
         return ens.get().toString();
-    }
-    @ApiOperation(value = "Supprimer un enseignant")
-    @DeleteMapping(value="/enseignants/delete/{id}")
-    public void deleteEnseignant(@PathVariable int id){
-    ensDAO.deleteEnsignsByIdEns(id);
-    }
-
-    @ApiOperation(value = "Ajouter un enseignant")
-    @PostMapping("/enseignants/add")
-    public Enseignant addEnseigant(@RequestBody Enseignant enseignant){
-        ensDAO.save(enseignant);
-        return  enseignant;
-    }
-    @ApiOperation(value = "Mise à jours des info sur un enseignant")
-    @PutMapping(value="/enseignants/update")
-    public void updateEnseignant(@RequestBody Enseignant enseignant){
-    ensDAO.save(enseignant);
     }
 
 
